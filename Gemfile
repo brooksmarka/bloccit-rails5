@@ -15,6 +15,11 @@ source 'https://rubygems.org'
    gem 'rails_12factor'
  end
 
+ group :development, :test do
+   gem 'rspec-rails', '~> 3.0'
+   gem 'rails-controller-testing'
+ end
+
  # #2
  group :development do
    # Use sqlite3 as the development database for Active Record
