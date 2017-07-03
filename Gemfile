@@ -26,6 +26,10 @@ source 'https://rubygems.org'
    gem 'sqlite3'
  end
 
+ group :development do
+   gem 'listen', '~> 3.0.5'
+ end
+
  # Use Puma as the app server
  gem 'puma', '~> 3.0'
  # Use SCSS for stylesheets
@@ -42,6 +46,6 @@ source 'https://rubygems.org'
 
  gem 'thor', '0.19.1'
 
- group :development do
-   gem 'listen', '~> 3.0.5'
- end
+ gem 'rb-fsevent', '~> 0.10.2'
+
+ gem 'bootstrap-sass'
