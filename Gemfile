@@ -49,3 +49,5 @@ source 'https://rubygems.org'
  gem 'rb-fsevent', '~> 0.10.2'
 
  gem 'bootstrap-sass'
+
+gem 'pry-rails', :group => :development
