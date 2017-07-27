@@ -117,7 +117,6 @@ RSpec.describe PostsController, type: :controller do
       delete :destroy, params: { topic_id: my_topic.id, id: my_post.id }
       expect(response).to redirect_to my_topic
     end
-
   end
 
 end
