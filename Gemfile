@@ -16,6 +16,7 @@ source 'https://rubygems.org'
  end
 
  group :development, :test do
+   gem 'pry-rails'
    gem 'rspec-rails', '~> 3.0'
    gem 'rails-controller-testing'
    gem 'shoulda'
