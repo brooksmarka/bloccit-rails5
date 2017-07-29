@@ -1,6 +1,17 @@
 class User < ApplicationRecord
 
+  def upercase_name(name)
+  s = name.to_s.split(" ")
+  cap = []
+    s.each  do | i |
+      cap << i.capitalize
+    end
+  final = cap.join(" ")
+  end
+
   before_save { self.email = email.downcase if email.present? }
+
+  before_save { self.name = upercase_name(name) }
 
   validates :name, length: {minimum: 1, maximum:100 }, presence: true
 
@@ -13,5 +24,5 @@ class User < ApplicationRecord
             length: { minimum: 3, maximum: 254 }
 
   has_secure_password
-  
+
 end
