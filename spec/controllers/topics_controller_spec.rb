@@ -5,7 +5,12 @@ include SessionsHelper
 RSpec.describe TopicsController, type: :controller do
   let (:my_topic) { Topic.create!(name:  RandomData.random_sentence, description:   RandomData.random_paragraph) }
 
-  context "moderator" do
+  context "moderator user" do
+    before do
+      user= User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "helloworld", role: :moderator)
+      create_session(user)
+    end
+
     describe "GET index" do
       it "returns http success" do
         get :index
@@ -36,16 +41,27 @@ RSpec.describe TopicsController, type: :controller do
     end
 
     describe "GET new" do
-     it "returns http redirect" do
+
+      it "returns http redirect" do
+        get :new
+        expect(response.status).to eq 302
+      end
+
+     it "redirects_to topics_path since moderators can't create topics" do
        get :new
-       expect(response).to redirect_to(new_session_path)
+       expect(response).to redirect_to topics_path
      end
    end
 
    describe "POST create" do
-     it "returns http redirect" do
+     it "redirects to the new topic" do
        post :create, params: { topic: { name: RandomData.random_sentence, description: RandomData.random_paragraph } }
-       expect(response).to redirect_to(new_session_path)
+       expect(response.status).to eq 302
+     end
+
+     it "redirects to topics_path" do
+       post :create, params: { topic: { name: RandomData.random_sentence, description: RandomData.random_paragraph } }
+       expect(response).to redirect_to topics_path
      end
    end
 
