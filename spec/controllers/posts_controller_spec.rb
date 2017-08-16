@@ -5,14 +5,15 @@ include SessionsHelper
 RSpec.describe PostsController, type: :controller do
   let(:my_user) { User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "helloworld") }
   let(:other_user) { User.create!(name: RandomData.random_name, email: RandomData.random_email, password: "helloworld", role: :member) }
+  let(:moderator) { User.create!(name: RandomData.random_name, email: RandomData.random_email, password: "helloworld", role: :moderator) }
   let (:my_topic) { Topic.create!(name:  RandomData.random_sentence, description: RandomData.random_paragraph) }
   let(:my_post) { my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: my_user) }
 
-  context "moderator" do
-    # before do
-    #other_user.moderator!
-    #create_session(other_user)
-    #end
+  context "moderator doing CRUD on a post they don't own" do
+    before do
+      create_session(moderator)
+    end
+
     describe "GET show" do
       it "returns http success" do
         get :show, params: { topic_id: my_topic.id, id: my_post.id }
@@ -34,11 +35,6 @@ RSpec.describe PostsController, type: :controller do
       it "returns http success" do
         get :new, params: { topic_id: my_topic.id }
         expect(response).to have_http_status(:success)
-      end
-
-      it "renders the #new view" do
-        get :new, params: { topic_id: my_topic.id }
-        expect(response).to render_template :new
       end
 
       it "instantiates @post" do
@@ -109,9 +105,14 @@ RSpec.describe PostsController, type: :controller do
     describe "DELETE destroy" do
       it "deletes the post" do
         delete :destroy, params: { topic_id: my_topic.id, id: my_post.id }
-        expect(response).to redirect_to(my_topic, my_post)
+        count = Post.where({id: my_post.id}).size
+        expect(count).to eq 0
       end
 
+      it "redirects to posts index" do
+        delete :destroy, params: { topic_id: my_topic.id, id: my_post.id }
+        expect(response).to redirect_to my_topic
+      end
     end
   end
 
