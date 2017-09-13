@@ -2,6 +2,7 @@ class Post < ApplicationRecord
   belongs_to :topic
   belongs_to :user
   has_many :comments, dependent: :destroy
+  after_create :create_favorite
 
   #relates the models and allows us to call post.votes.  dependent: :destory ensures that votes are destroyed when their parent post is deleted
   has_many :votes, dependent: :destroy
@@ -31,4 +32,10 @@ class Post < ApplicationRecord
     new_rank = points + age_in_days
     update_attribute(:rank, new_rank)
   end
+
+  def create_favorite
+    user.favorites.create!(value: 1, post: self)
+    FavoriteMailer.new_post(self).deliver_now
+  end
+
 end
